@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+</head>
+<body>
+    <h2>Register New User</h2>
+
+    <form id="registerForm">
+        <label>Username:</label><br>
+        <input type="text" name="username" required><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <label>Role:</label><br>
+        <select name="role" required>
+            <option value="admin">Admin</option>
+            <option value="operator">Operator</option>
+            <option value="viewer" selected>Viewer</option>
+        </select><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="response" style="margin-top: 20px; font-weight: bold;"></div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const data = new URLSearchParams(formData);
+
+            const res = await fetch('api/register.php', {
+                method: 'POST',
+                body: data
+            });
+
+            const result = await res.json();
+            responseDiv.innerText = result.message;
+            responseDiv.style.color = result.success ? 'green' : 'red';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+/* --- FUTURISTIC LOGIN PAGE --- */
+
+/* --- Animated Grid Background --- */
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(137, 147, 164, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(137, 147, 164, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: move-grid 20s linear infinite;
+}
+
+@keyframes move-grid {
+    from { background-position: 0 0; }
+    to { background-position: 40px 80px; }
+}
+
+/* --- Main Login Container --- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.login-box {
+    animation: slide-in-fade 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@keyframes slide-in-fade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-panel {
+    width: 100%;
+    max-width: 450px;
+    margin-bottom: 0;
+    /* Add a subtle border glow */
+    box-shadow: 0 0 20px rgba(88, 166, 255, 0.2), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.login-panel header {
+    display: block;
+    text-align: center;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.login-panel header h1 {
+    font-size: 2.2rem;
+    text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color);
+}
+
+.error-message {
+    color: var(--danger-color);
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* --- Floating Label Effect --- */
+.form-group.floating-label {
+    position: relative;
+}
+
+.floating-label input {
+    width: 100%;
+    padding: 20px 12px 8px 12px; /* Make space for the label */
+    transition: transform 0.2s ease-out; /* Added for smooth zoom */
+}
+
+/* --- NEW: Zoom effect on hover/focus --- */
+.floating-label input:hover,
+.floating-label input:focus {
+    transform: scale(1.02);
+}
+
+
+.floating-label label {
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    color: var(--secondary-text-color);
+    pointer-events: none;
+    transition: all 0.2s ease-out;
+}
+
+/* When the input has focus or has content, move the label up */
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label {
+    top: 5px;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+}
+
+/* --- Ripple Effect Button --- */
+.btn.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ripple:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(88, 166, 255, 0.5);
+}
+
+/* The ripple element */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple-effect 0.6s linear;
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

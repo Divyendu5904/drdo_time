@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DRDO Network Monitor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.style.css">
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="background-animation"></div>
+
+    <div class="login-container">
+        <div class="login-box">
+            <div class="panel login-panel">
+                <header>
+                    <h1>DRDO Network Monitoring System</h1>
+                    <p>Secure Access Portal</p>
+                </header>
+
+                <!-- Login Form -->
+                <form id="login-form" method="POST">
+                    <!-- Username Field -->
+                    <div class="form-group floating-label">
+                        <input type="text" id="username" name="username" required placeholder=" ">
+                        <label for="username">Username</label>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group floating-label">
+                        <input type="password" id="password" name="password" required placeholder=" ">
+                        <label for="password">Password</label>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="btn btn-ripple">Login</button>
+
+                    <!-- Error Message -->
+                    <p id="login-error" class="error-message" style="display: none;"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Script -->
+    <script src="login.script.js"></script>
+</body>
+</html>

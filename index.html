@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRDO Network Monitoring System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <div class="user-info">Welcome, <span id="username-display">User</span>
+                <button id="theme-toggle" class="btn-secondary">🌙</button>
+            </div>
+            <h1>DRDO Network Monitoring System</h1>
+            <button id="logout-button" class="btn btn-logout">Logout</button>
+        </header>
+
+        <nav class="main-nav">
+            <a href="#" class="nav-link active" data-view="dashboard">Dashboard</a>
+            <a href="#" class="nav-link" data-view="devices">Live Status</a>
+            <a href="#" class="nav-link" data-view="topology">Network Topology</a>
+            <a href="#" class="nav-link" data-view="management">Management</a>
+            <a href="#" class="nav-link" data-view="maintenance">Maintenance</a>
+            <a href="#" class="nav-link" data-view="history">Logs & History</a>
+            <a href="#" class="nav-link" data-view="guides">Error Guides</a>
+            <a href="#" class="nav-link" data-view="admin" id="admin-nav-link" style="display: none;">Admin</a>
+        </nav>
+
+        <div class="page-content">
+            <div id="dashboard-view" class="view active-view">
+                <div class="dashboard-stats">
+                    <div class="stat-card"><h3>Total Buildings</h3><p id="stat-total-buildings">0</p></div>
+                    <div class="stat-card"><h3>Total Devices</h3><p id="stat-total-devices">0</p></div>
+                    <div class="stat-card stat-success"><h3>Devices Online</h3><p id="stat-active-devices">0</p></div>
+                    <div class="stat-card stat-danger"><h3>Alerts (Offline)</h3><p id="stat-inactive-devices">0</p></div>
+                </div>
+                <div class="panel alerts-panel"><h2><span class="icon">🚨</span> Active Alerts</h2><div id="active-alerts-container"></div></div>
+            </div>
+            
+            <div id="devices-view" class="view">
+                <div class="panel status-panel">
+                    <h2><span class="icon">📡</span> Live Status</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead><tr><th>Device Name</th>
+                                <th>IP Address</th>
+                                <th>Status</th>
+                                <th>Reason/latency</th>
+                                <th>Actions</th>
+                            </tr></thead>
+                            <tbody id="devices-table-body"></tbody>
+                        
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="topology-view" class="view">
+                <div class="panel topology-panel">
+                    <div class="panel-header">
+                        <h2><span class="icon">🌐</span> Network Topology</h2>
+                        <div class="topology-controls">
+                            <button id="refresh-topology" class="btn" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">Refresh</button>
+                            <button id="center-topology" class="btn" style="width: auto; padding: 8px 16px; font-size: 0.9rem;">Center View</button>
+                        </div>
+                    </div>
+                    <div class="topology-container">
+                    
+                        <div id="topology-canvas"></div>
+                    </div>
+                    <div class="topology-legend">
+                        <div class="legend-item">
+                            <div class="legend-icon router"></div>
+                            <span>Router</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon firewall"></div>
+                            <span>Firewall</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon central-switch"></div>
+                            <span>Central Switch</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon building-switch active"></div>
+                            <span>Building Switch (Online)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon building-switch inactive"></div>
+                            <span>Building Switch (Offline)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon building-switch maintenance"></div>
+                            <span>Building Switch (Maintenance)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="management-view" class="view"><main><div class="management-grid"><div class="panel"><h2><span class="icon">🏢</span> Building Management</h2>
+                <form id="add-building-form"><div class="form-group"><label for="building-name">Building Name</label><input type="text" id="building-name" name="name" required></div><div class="form-group"><label for="building-location">Location / Block</label><input type="text" id="building-location" name="location"></div><button type="submit" class="btn">Add Building</button></form></div></div><div class="management-grid"><div class="panel"><h2><span class="icon">🔧</span> Device Management</h2><form id="add-device-form"><div class="form-group"><label for="device-building">Select Building</label><select id="device-building" name="building_id" required><option value="">-- Select --</option></select></div><div class="form-group"><label for="device-name">Device Name</label><input type="text" id="device-name" name="name" required>
+                </div><div class="form-group"><label for="ip-address">IP Address</label><input type="text" id="ip-address" name="ip_address" required></div><div class="form-group"><label for="device-status">Initial Status</label><select id="device-status" name="status"><option value="1">Active</option><option value="0">inactive</option></select></div><div class="form-group" id="reason-group" style="display: none;"><label for="reason">Reason</label><textarea id="reason" name="reason" rows="2"></textarea></div><button type="submit" class="btn">Add Device</button></form></div></div></main></div>
+            <div id="maintenance-view" class="view"><main><div class="management-grid"><div class="panel"><h2><span class="icon">🛠️</span> Schedule Maintenance</h2><form id="schedule-maintenance-form"><div class="form-group"><label for="maintenance-device">Select Device</label><select id="maintenance-device" name="device_id" required></select></div><div class="form-group"><label for="maintenance-start">Start Time</label><input type="datetime-local" id="maintenance-start" name="start_time" required></div><div class="form-group"><label for="maintenance-end">End Time</label><input type="datetime-local" id="maintenance-end" name="end_time" required></div><div class="form-group"><label for="maintenance-reason">Reason</label><textarea id="maintenance-reason" name="reason" rows="2" placeholder="e.g., Firmware Upgrade"></textarea></div><button type="submit" class="btn">Schedule</button></form></div></div><div class="management-grid"><div class="panel"><h2><span class="icon">📅</span> Upcoming Maintenance</h2><div class="table-container"><table><thead><tr><th>Device</th><th>Start Time</th><th>End Time</th><th>Reason</th><th>Actions</th></tr></thead><tbody id="maintenance-table-body"></tbody></table></div></div></div></main></div>
+            <div id="history-view" class="view"><div class="panel logs-panel"><h2><span class="icon">📜</span> System Logs</h2><div id="logs-container"></div></div><div class="panel resolved-alerts-panel"><h2><span class="icon">✅</span> Resolved Alerts History</h2><div class="table-container"><table><thead><tr><th>Device</th><th>Description</th><th>Detected At</th><th>Resolved At</th></tr></thead><tbody id="resolved-alerts-tbody"></tbody></table></div></div></div>
+            <div id="guides-view" class="view"><div class="panel error-panel"><div class="panel-header"><h2><span class="icon">🔍</span> Error Diagnosis Guide</h2><button id="add-guide-btn" class="btn" style="display: none; width: auto; font-size: 0.9rem;">Add New Guide</button></div><div class="form-group"><input type="text" id="error-search-input" placeholder="Search..."></div><div id="error-guides-container"></div></div></div>
+            <div id="admin-view" class="view"><main><div class="management-grid"><div class="panel"><h2><span class="icon">👤</span> Add New User</h2><form id="add-user-form"><div class="form-group"><label for="new-username">Username</label><input type="text" id="new-username" name="username" required></div><div class="form-group"><label for="new-password">Password</label><input type="password" id="new-password" name="password" required></div><div class="form-group"><label for="new-user-role">Role</label><select id="new-user-role" name="role" required><option value="viewer">Viewer</option><option value="operator">Operator</option><option value="admin">Administrator</option></select></div><button type="submit" class="btn">Create User</button></form></div></div><div class="management-grid"><div class="panel"><h2><span class="icon">👥</span> Manage Users</h2><div class="table-container"><table class="user-table"><thead><tr><th>Username</th><th>Role</th><th>Date Created</th><th>Actions</th></tr></thead><tbody id="users-table-body"></tbody></table></div></div></div></main></div>
+        </div>
+    </div>
+
+    <div id="edit-device-modal" class="modal-overlay" style="display: none;"><div class="modal-content"><span class="modal-close">&times;</span><h2>Edit Device</h2><form id="edit-device-form"><input type="hidden" id="edit-device-id" name="device_id"><div class="form-group"><label for="edit-device-name">Device Name</label><input type="text" id="edit-device-name" name="name" required></div><div class="form-group"><label for="edit-ip-address">IP Address</label><input type="text" id="edit-ip-address" name="ip_address" required></div><div class="form-group"><label for="edit-device-building">Building</label><select id="edit-device-building" name="building_id" required></select></div><button type="submit" class="btn">Save Changes</button></form></div></div>
+    <div id="history-chart-modal" class="modal-overlay" style="display: none;"><div class="modal-content chart-modal-content"><span class="modal-close">&times;</span><h2 id="chart-device-name">Device History</h2><div class="chart-container"><canvas id="latency-chart"></canvas></div></div></div>
+    <div id="guide-modal" class="modal-overlay" style="display: none;"><div class="modal-content"><span class="modal-close">&times;</span><h2 id="guide-modal-title">Add New Guide</h2><form id="guide-form"><input type="hidden" id="guide-id" name="guide_id"><div class="form-group"><label for="guide-error-code">Error Code</label><input type="text" id="guide-error-code" name="error_code" placeholder="e.g., PING_TIMEOUT" required></div><div class="form-group"><label for="guide-title">Title</label><input type="text" id="guide-title" name="title" required></div><div class="form-group"><label for="guide-description">Description</label><textarea id="guide-description" name="description" rows="3" required></textarea></div><div class="form-group"><label for="guide-solution">Solution</label><textarea id="guide-solution" name="solution" rows="5" required></textarea></div><button type="submit" class="btn">Save Guide</button></form></div></div>
+
+    <script src="script.js"></script>
+    
+    <script>
+        // Simple theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // JavaScript (place at the end of body or inside DOMContentLoaded)
+const htmlRoot = document.documentElement;
+const themeToggle = document.getElementById('theme-toggle');
+
+// --- Load saved theme on startup ---
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    htmlRoot.classList.add('dark-theme');
+    themeToggle.textContent = '☀️'; // Sun = switch to light
+} else {
+    htmlRoot.classList.remove('dark-theme');
+    themeToggle.textContent = '🌙'; // Moon = switch to dark
+}
+
+// --- Toggle theme on click ---
+themeToggle.addEventListener('click', function () {
+    if (htmlRoot.classList.contains('dark-theme')) {
+        // Switch to light mode
+        htmlRoot.classList.remove('dark-theme');
+        localStorage.setItem('theme', 'light');
+        themeToggle.textContent = '🌙'; // Show moon (ready to switch to dark)
+    } else {
+        // Switch to dark mode
+        htmlRoot.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+        themeToggle.textContent = '☀️'; // Show sun (ready to switch to light)
+    }
+});
+
+
+        });
+    </script>
+</body>
+</html>
